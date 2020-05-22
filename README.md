@@ -1,5 +1,5 @@
 # Stuff-manager
-Script utility for fetching stuff and tasks from REST JSON API and creating performance reports based on in/complete tasks 
+Script utility for fetching stuff and tasks from REST JSON API and creating performance reports based on in/complete tasks. 
 
 ## Clone repository
 ```sh
