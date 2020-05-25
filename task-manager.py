@@ -43,8 +43,8 @@ else:
 # filtering Todos by user id and completion
 def get_completed_by_id(todos, current_user_id):
     completed = []
-    for todo in todos_list:
-        if todo.get('userId') == 1:
+    for todo in todos:
+        if todo.get('userId') == current_user_id:
             if todo['completed']:
                 completed.append(todo['title'])
     return completed
@@ -53,8 +53,8 @@ def get_completed_by_id(todos, current_user_id):
 # filtering Todos by user id and INcompletion
 def get_uncompleted_by_id(todos, current_user_id):
     uncompleted = []
-    for todo in todos_list:
-        if todo.get('userId') == 1:
+    for todo in todos:
+        if todo.get('userId') == current_user_id:
             if not todo['completed']:
                 uncompleted.append(todo['title'])
     return uncompleted
@@ -71,7 +71,7 @@ def write_in_file(username):
     f = open(file, 'w+')
     user = find_user_object(username)
 
-    date = datetime.today().strftime('%d-%m-%Y %H:%M')
+    date = datetime.today().strftime('%d.%m.%Y %H:%M')
     f.write(user['name'] + ' <' + user['email'] + '> ' + date + '\n')
     f.write(user['company']['name'] + '\n')
     f.write('\n')
@@ -81,29 +81,24 @@ def write_in_file(username):
     if not len(user_completed_tasks):
         print(f'{username} has no completed tasks.')
     for task in user_completed_tasks:
-        if not len(task) > 50:
-            f.write(task + '\n')
-        else:
-            f.write(task[0:50] + '...' + '\n')
+        line_task = task[0:50] + '...' if len(task) > 50 else task
+        f.write(line_task + '\n')
 
-    f.write('\n')
-    f.write('Оставшиеся задачи:' + '\n')
+    f.write('\n' + 'Оставшиеся задачи:' + '\n')
     user_uncompleted_tasks = get_uncompleted_by_id(todos_list, user['id'])
     if not len(user_uncompleted_tasks):
         print(f'{username} has no tasks left to do.')
     for task in user_uncompleted_tasks:
-        if not len(task) > 50:
-            f.write(task + '\n')
-        else:
-            f.write(task[0:50] + '...' + '\n')
-
+        line_task = task[0:50] + '...' if len(task) > 50 else task
+        f.write(line_task + '\n')
     f.close()
 
 
 def make_file(username):
     if os.path.isfile('tasks/' + username + '.txt'):
         old_name = os.path.join('tasks', username + '.txt')
-        date = datetime.today().strftime('_%Y-%m-%dT%H:%M')
+        created_at = os.stat(old_name).st_ctime
+        date = datetime.fromtimestamp(created_at).strftime('_%Y-%m-%dT%H:%M')
         username_date = username + date
         new_name = os.path.join('tasks', username_date + '.txt')
         os.rename(old_name, new_name)
