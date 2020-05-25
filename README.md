@@ -6,6 +6,11 @@ Script utility for fetching stuff and tasks from REST JSON API and creating perf
 git clone https://github.com/arcbjorn/stuff-manager.git
 ```
 
+## Make sure you have Python
+```sh
+python -V
+```
+
 ## Generate reports
 ```sh
 cd stuff-manager
